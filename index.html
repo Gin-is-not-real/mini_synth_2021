@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tiny Synth</title>
+</head>
+<body>
+    <header>
+        <h1>Tiny Synth !</h1>
+        <p>Mini synthé</p>
+    </header>
+
+    <main>
+
+        <div id="div_dev">
+            <p>*dev*</p>
+
+            <div id="div-inputs">
+                <input type="button" id="btn-on" value="on" ></input>
+
+                <label for="general-amp">Volume</label>
+                <input type="range" id="general-amp" min="0" max="1" step="0.1">
+
+                <label for="frequency" id="lab-frequency">Frequence 400 Hz</label>
+                <input type="range" id="frequency" min="40" max="1600" step="1">
+            </div>
+            <div id="div-visus">
+                <canvas id="oscilloscope" width="320px" height="200px"></canvas>
+                <canvas id="spectrum" width="320px" height="200px"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+    <footer></footer>
+
+    <!-- <script src="audioCtx.js"></script> -->
+    <script src="main.js"></script>
+
+    <style>
+        #div-inputs {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        
+    </style>
+</body>
+</html>
