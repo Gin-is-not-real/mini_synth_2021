@@ -18,19 +18,23 @@
         <div id="div_dev">
             <p>*dev*</p>
 
+            
             <div id="div-inputs">
-                <button id="btn-trig-on" value="on">declencher</button>
-                <button id="btn-lock-on" value="on">maintenir</button>
+                <label for="amp-general">Volume General</label>
+                <input type="range" id="amp-general" min="0" max="1" step="0.1">
 
-                <label for="general-amp">Volume</label>
-                <input type="range" id="general-amp" min="0" max="1" step="0.1">
+                <button id="btn-trig-on" value="off">declencher</button>
+                <button id="btn-lock-on" value="off">maintenir</button>
+
+                <label for="amp-osc">Volume Oscillateur</label>
+                <input type="range" id="amp-osc" min="0" max="1" step="0.1">
 
                 <label for="frequency" id="lab-frequency">Frequence 400 Hz</label>
                 <input type="range" id="frequency" min="40" max="1600" step="1">
             </div>
             <div id="div-visus">
-                <canvas id="oscilloscope" width="320px" height="200px"></canvas>
-                <canvas id="spectrum" width="320px" height="200px"></canvas>
+                <canvas id="oscilloscope" width="150px" height="100px"></canvas>
+                <canvas id="spectrum" width="150px" height="100px"></canvas>
             </div>
         </div>
 
@@ -43,12 +47,9 @@
 
     <style>
         #div-inputs {
-            width: 320px;
+            width: 150px;
             display: flex;
             flex-direction: column;
-        }
-        button{
-            width: 50%;
         }
         canvas {
             border: 1px solid black;

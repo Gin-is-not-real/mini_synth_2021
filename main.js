@@ -12,7 +12,6 @@ amp.gain.value = 0.5;
 amp.gain.lastValue = 0.5;
 
 let osc = audioCtx.createOscillator();
-osc.amp = amp;
 
 let generalGain = audioCtx.createGain();
 generalGain.gain.value = 0;
@@ -64,6 +63,7 @@ spectrum.stop = function() {
     on connecte les nodes les uns aux autres: 
         oscillateur->oscillator.amp->visualisers->generalGain->sortie
 */
+
 osc.connect(amp);
 amp.connect(oscilloscope);
 oscilloscope.connect(spectrum);
@@ -77,6 +77,9 @@ osc.start();
 /*
     recuperation des controlleurs, assign d'un parametre cible, ajout event listener 
 */
+/*
+    le trigger declenche le son quand il on clic dessus et le stop quand on relache
+*/
 let btnTrigOn = document.getElementById('btn-trig-on');
 btnTrigOn.target = generalGain.gain;
 btnTrigOn.addEventListener("mousedown", function() {
@@ -86,35 +89,56 @@ btnTrigOn.addEventListener("mousedown", function() {
         spectrum.run();
 })
 btnTrigOn.addEventListener("mouseup", function() {
-    this.value = 'on';
+    this.value = 'off';
     sendValue(0, this.target);
     oscilloscope.stop();
     spectrum.stop();
 })
+
+/*
+    le btn lock pour maintenir le son ouvert
+*/
 let btnLockOn = document.getElementById('btn-lock-on');
 btnLockOn.target = generalGain.gain;
 btnLockOn.addEventListener("click", function() {
-    if(this.value == 'on') {
-        this.value = 'off';
+    if(this.value == 'off') {
+        this.value = 'on';
         let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
         sendValue(valToSend, this.target);
         oscilloscope.run();
         spectrum.run();
     }
     else {
-        this.value = 'on';
+        this.value = 'off';
         sendValue(0, this.target);
         oscilloscope.stop();
         spectrum.stop();
     }
 })
 
-let rngGeneralAmp = document.getElementById('general-amp');
+/*
+    les inputs 
+*/
+let rngGeneralAmp = document.getElementById('amp-general');
 rngGeneralAmp.target = generalGain.gain;
 rngGeneralAmp.value = rngGeneralAmp.target.lastValue;
 rngGeneralAmp.addEventListener("input", function() {
     this.target.lastValue = this.value;
-    sendValue(this.value, this.target);
+
+    if(btnLockOn.value =='on') {
+        sendValue(this.value, this.target);
+    }
+})
+
+let rngOscAmp = document.getElementById('amp-osc');
+rngOscAmp.target = amp.gain;
+rngOscAmp.value = rngOscAmp.target.lastValue;
+rngOscAmp.addEventListener("input", function() {
+    this.target.lastValue = this.value;
+
+    if(btnLockOn.value =='on') {
+        sendValue(this.value, this.target);
+    }
 })
 
 let rngFrequency = document.getElementById('frequency');
