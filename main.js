@@ -77,9 +77,23 @@ osc.start();
 /*
     recuperation des controlleurs, assign d'un parametre cible, ajout event listener 
 */
-let btnOn = document.getElementById('btn-on');
-btnOn.target = generalGain.gain;
-btnOn.addEventListener("click", function() {
+let btnTrigOn = document.getElementById('btn-trig-on');
+btnTrigOn.target = generalGain.gain;
+btnTrigOn.addEventListener("mousedown", function() {
+        let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
+        sendValue(valToSend, this.target);
+        oscilloscope.run();
+        spectrum.run();
+})
+btnTrigOn.addEventListener("mouseup", function() {
+    this.value = 'on';
+    sendValue(0, this.target);
+    oscilloscope.stop();
+    spectrum.stop();
+})
+let btnLockOn = document.getElementById('btn-lock-on');
+btnLockOn.target = generalGain.gain;
+btnLockOn.addEventListener("click", function() {
     if(this.value == 'on') {
         this.value = 'off';
         let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
