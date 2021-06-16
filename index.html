@@ -17,7 +17,6 @@
 
         <div id="div_dev">
             <p>*dev*</p>
-
             
             <div id="div-inputs">
                 <label for="amp-general">Volume General</label>
@@ -32,9 +31,20 @@
                 <label for="frequency" id="lab-frequency">Frequence 400 Hz</label>
                 <input type="range" id="frequency" min="40" max="1600" step="1">
             </div>
+
             <div id="div-visus">
                 <canvas id="oscilloscope" width="150px" height="100px"></canvas>
                 <canvas id="spectrum" width="150px" height="100px"></canvas>
+            </div>
+
+            <div id="div-inputs-2">
+                <label for="fftSize" id="lab-fftSize">fftSize</label>
+                <select id="fftSize">
+                    <option value="128">128</option>
+                    <option value="256">256</option>
+                    <option value="512">512</option>
+                    <option value="1024">1024</option>
+                </select>
             </div>
         </div>
 

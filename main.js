@@ -30,10 +30,15 @@ generalGain.gain.lastValue = 0.2;
 let oscilloscope = audioCtx.createAnalyser();
 oscilloscope.intervalId = undefined;
 
-oscilloscope.fftSize = 8192;//Must be a power of 2 between 252^5 and 2152^15, so one of: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, and 32768. Defaults to 2048
-oscilloscope.buffer = oscilloscope.frequencyBinCount;
-oscilloscope.tabData = new Uint8Array(oscilloscope.buffer);//nombre d'index = fttSize/2
-console.log(oscilloscope.tabData);
+// oscilloscope.fftSize = 8192;
+//Must be a power of 2 between 252^5 and 2152^15, so one of: 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, and 32768. Defaults to 2048
+oscilloscope.setFftSize = function(size) {
+    oscilloscope.fftSize = size;
+    oscilloscope.buffer = oscilloscope.frequencyBinCount;
+    oscilloscope.tabData = new Uint8Array(oscilloscope.buffer);//nombre d'index = fttSize/2
+    console.log(oscilloscope.tabData);
+}
+oscilloscope.setFftSize(1024);
 //#TEST 
 // let tabData = oscilloscope.tabData.slice();
 // tabData.sort(function(a, b) {
@@ -85,24 +90,6 @@ osc.start();
     recuperation des controlleurs, assign d'un parametre cible, ajout event listener 
 */
 /*
-    le trigger declenche le son quand il on clic dessus et le stop quand on relache
-*/
-let btnTrigOn = document.getElementById('btn-trig-on');
-btnTrigOn.target = generalGain.gain;
-btnTrigOn.addEventListener("mousedown", function() {
-        let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
-        sendValue(valToSend, this.target);
-        oscilloscope.run();
-        spectrum.run();
-})
-btnTrigOn.addEventListener("mouseup", function() {
-    this.value = 'off';
-    sendValue(0, this.target);
-    oscilloscope.stop();
-    spectrum.stop();
-})
-
-/*
     le btn lock pour maintenir le son ouvert
 */
 let btnLockOn = document.getElementById('btn-lock-on');
@@ -122,6 +109,31 @@ btnLockOn.addEventListener("click", function() {
         spectrum.stop();
     }
 })
+/*
+    le trigger declenche le son quand il on clic dessus et le stop quand on relache
+    si le bouton maintient est déja allumé ->
+*/
+let btnTrigOn = document.getElementById('btn-trig-on');
+btnTrigOn.target = generalGain.gain;
+btnTrigOn.addEventListener("mousedown", function() {
+    this.value = 'on';
+    let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
+    sendValue(valToSend, this.target);
+    oscilloscope.run();
+    spectrum.run();
+})
+btnTrigOn.addEventListener("mouseup", function() {
+    this.value = 'off';
+
+    if(btnLockOn.value != 'on') {
+        sendValue(0, this.target);
+        oscilloscope.stop();
+        spectrum.stop();
+    }
+
+})
+
+
 
 /*
     les inputs 
@@ -155,6 +167,22 @@ rngFrequency.value = rngFrequency.target.value;
 rngFrequency.addEventListener('input', function() {
     sendValue(this.value, this.target);
     labFrequency.textContent = 'Frequence ' + this.value + ' Hz';
+})
+
+
+/*
+    lorsqu'on modifie la valeur de la fftSize, on doit reinitialiser le buffer
+*/
+let selFftSize = document.querySelector('#fftSize');
+selFftSize.target = oscilloscope.fftSize;
+selFftSize.addEventListener('input', function() {
+    console.log(this.value);
+    oscilloscope.setFftSize(this.value);
+
+    if(btnLockOn.value =='on') {
+        oscilloscope.stop();
+        oscilloscope.run();
+    }
 })
 
 ///////////////////////////////////////////////////////////
