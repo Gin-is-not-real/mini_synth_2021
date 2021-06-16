@@ -13,9 +13,9 @@ amp.gain.lastValue = 0.5;
 
 let osc = audioCtx.createOscillator();
 
-let generalGain = audioCtx.createGain();
-generalGain.gain.value = 0;
-generalGain.gain.lastValue = 0.2;
+let generalAmp = audioCtx.createGain();
+generalAmp.gain.value = 0;
+generalAmp.gain.lastValue = 0.2;
 
 /*
     creation des analyser nodes
@@ -73,14 +73,14 @@ spectrum.stop = function() {
 
 /*
     on connecte les nodes les uns aux autres: 
-        oscillateur->oscillator.amp->visualisers->generalGain->sortie
+        oscillateur->oscillator.amp->visualisers->generalAmp->sortie
 */
 
 osc.connect(amp);
 amp.connect(oscilloscope);
 oscilloscope.connect(spectrum);
-spectrum.connect(generalGain);
-generalGain.connect(audioCtx.destination);
+spectrum.connect(generalAmp);
+generalAmp.connect(audioCtx.destination);
 
 osc.start();
 
@@ -93,7 +93,7 @@ osc.start();
     le btn lock pour maintenir le son ouvert
 */
 let btnLockOn = document.getElementById('btn-lock-on');
-btnLockOn.target = generalGain.gain;
+btnLockOn.target = generalAmp.gain;
 btnLockOn.addEventListener("click", function() {
     if(this.value == 'off') {
         this.value = 'on';
@@ -114,7 +114,7 @@ btnLockOn.addEventListener("click", function() {
     si le bouton maintient est déja allumé ->
 */
 let btnTrigOn = document.getElementById('btn-trig-on');
-btnTrigOn.target = generalGain.gain;
+btnTrigOn.target = generalAmp.gain;
 btnTrigOn.addEventListener("mousedown", function() {
     this.value = 'on';
     let valToSend = this.target.lastValue != undefined ? this.target.lastValue : 1;
@@ -139,7 +139,7 @@ btnTrigOn.addEventListener("mouseup", function() {
     les inputs 
 */
 let rngGeneralAmp = document.getElementById('amp-general');
-rngGeneralAmp.target = generalGain.gain;
+rngGeneralAmp.target = generalAmp.gain;
 rngGeneralAmp.value = rngGeneralAmp.target.lastValue;
 rngGeneralAmp.addEventListener("input", function() {
     this.target.lastValue = this.value;
